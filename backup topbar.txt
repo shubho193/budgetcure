@@ -1,0 +1,54 @@
+import Topbar from '@/components/shared/Topbar'
+import Bottombar from '@/components/shared/Bottombar'
+import { Button } from "@/components/ui/button"
+import { ChevronRight } from "lucide-react"
+import React from 'react'
+import { Outlet } from 'react-router-dom'
+
+const RootLayout = () => {
+  return (
+    <div className='w-full' style={{ marginTop: '1rem', marginLeft: '4rem', marginRight: '4rem'}}>
+      <Topbar />
+      <div className='w-full relative border' style={{ marginTop : '3rem', height: '40vh'}}>
+        <img src="/assets/images/card2.jpg" alt="card" className='object-cover h-full w-full' style={{ borderRadius : '0.7rem' }}/>
+        <div className='absolute bottom-0 w-full h-full  flex justify-center items-center'>
+          <ul>
+            <li className=' text-5xl text-white  text-center'>Find the Best Hospital for You
+            </li>
+            <li className=' text-xl text-white  text-center pt-3'>Discover the perfect hospital for your budget!
+            </li>
+          </ul>
+          
+        </div>
+        <div className='absolute top-0 w-full flex justify-center items-end' style={{height: '113%'}}>
+          <div className='relative h-24 w-1/2 bg-[#F0F0F0] flex justify-center items-center'  style={{ borderRadius : '2rem'}}>
+            
+            <div className='text-right'>
+              <p className='pr-6 font-medium' >Location</p>
+              <p className='pr-6' style={{ fontSize: '12px'}}>Where are you located?</p>
+            </div>
+
+            <div className=" h-full min-h-[1em] w-px self-stretch bg-gradient-to-tr from-transparent via-neutral-500 to-transparent opacity-20 dark:opacity-100"> </div>
+            
+            <div className='text-left'>
+              <p className='pl-6 font-medium'>Budget</p>
+              <p className='pl-6' style={{ fontSize: '12px'}}>What's your budget?</p>            
+            </div>
+            
+            <div className='bg-primary-500 rounded-md absolute right-4'>
+              <Button size="icon">
+                <ChevronRight className="h-6 w-6"/>
+              </Button>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      <div className='flex absolute border'>
+        <p>Popular Hospitals Near you</p>
+      </div>
+    </div>
+  )
+}
+
+export default RootLayout
