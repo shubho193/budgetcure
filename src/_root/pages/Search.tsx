@@ -9,14 +9,48 @@ const Search = () => {
   const [category, setCategory] = useState('');
   const [budget, setBudget] = useState('');
   const [rating, setRating] = useState<number | undefined>();
+  const [filters, setFilters] = useState({
+    nearbyArea: true,
+    withinBudget: true,
+    specifiedCategories: true
+  });
   const { searchHospitals, hospitals, loading, error } = useHospitalSearch();
+
+  // Array of all hospital images
+  const hospitalImages = [
+    '/assets/images/hospitals/hospitals1.jpg',
+    '/assets/images/hospitals/hospitals2.jpg',
+    '/assets/images/hospitals/hospitals3.jpg',
+    '/assets/images/hospitals/hospitals4.jpg',
+    '/assets/images/hospitals/hospitals5.jpg',
+    '/assets/images/hospitals/hospitals6.jpg',
+    '/assets/images/hospitals/hospitals7.jpg',
+    '/assets/images/hospitals/hospitals8.jpg',
+    '/assets/images/hospitals/hospitals9.jpg',
+    '/assets/images/hospitals/hospitals10.jpg',
+    '/assets/images/hospitals/hospitals11.jpg',
+  ];
+
+  // Function to get a random hospital image
+  const getRandomHospitalImage = () => {
+    const randomIndex = Math.floor(Math.random() * hospitalImages.length);
+    return hospitalImages[randomIndex];
+  };
+
+  const handleFilterChange = (filterName: keyof typeof filters) => {
+    setFilters(prev => ({
+      ...prev,
+      [filterName]: !prev[filterName]
+    }));
+  };
 
   const handleSearch = () => {
     searchHospitals({
       location: location || undefined,
       budget: budget ? parseInt(budget) : undefined,
       category: category || undefined,
-      rating: rating
+      rating: rating,
+      filters: filters
     });
   };
 
@@ -94,8 +128,9 @@ const Search = () => {
               
               <div className="flex items-center mb-4">
                 <input 
-                  checked 
-                  id="checked-checkbox" 
+                  checked={filters.nearbyArea}
+                  onChange={() => handleFilterChange('nearbyArea')}
+                  id="nearby-area" 
                   type="checkbox" 
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
@@ -104,8 +139,9 @@ const Search = () => {
               
               <div className="flex items-center mb-4">
                 <input 
-                  checked 
-                  id="checked-checkbox" 
+                  checked={filters.withinBudget}
+                  onChange={() => handleFilterChange('withinBudget')}
+                  id="within-budget" 
                   type="checkbox" 
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
@@ -114,8 +150,9 @@ const Search = () => {
               
               <div className="flex items-center mb-4">
                 <input 
-                  checked 
-                  id="checked-checkbox" 
+                  checked={filters.specifiedCategories}
+                  onChange={() => handleFilterChange('specifiedCategories')}
+                  id="specified-categories" 
                   type="checkbox" 
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
@@ -127,7 +164,7 @@ const Search = () => {
                 <input 
                   checked={rating === 4}
                   onChange={() => setRating(4)}
-                  id="default-radio-2" 
+                  id="rating-4" 
                   type="radio" 
                   name="rating" 
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
@@ -139,7 +176,7 @@ const Search = () => {
                 <input 
                   checked={rating === 3}
                   onChange={() => setRating(3)}
-                  id="default-radio-1" 
+                  id="rating-3" 
                   type="radio" 
                   name="rating" 
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
@@ -151,7 +188,7 @@ const Search = () => {
                 <input 
                   checked={rating === 2}
                   onChange={() => setRating(2)}
-                  id="default-radio-1" 
+                  id="rating-2" 
                   type="radio" 
                   name="rating" 
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
@@ -163,7 +200,7 @@ const Search = () => {
                 <input 
                   checked={rating === 1}
                   onChange={() => setRating(1)}
-                  id="default-radio-1" 
+                  id="rating-1" 
                   type="radio" 
                   name="rating" 
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
@@ -175,12 +212,12 @@ const Search = () => {
                 <input 
                   checked={rating === undefined}
                   onChange={() => setRating(undefined)}
-                  id="default-radio-1" 
+                  id="rating-all" 
                   type="radio" 
                   name="rating" 
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
-                <label className="ms-2 text-sm font-normal text-gray-900 dark:text-gray-300">Unrated</label>
+                <label className="ms-2 text-sm font-normal text-gray-900 dark:text-gray-300">All Ratings</label>
               </div>
             </div>
           </div>
@@ -194,14 +231,16 @@ const Search = () => {
           
           {hospitals.map((hospital) => (
             <div key={hospital.$id} className='h-72 w-full bg-[#F0F0F0] rounded-3xl flex mb-4'>
-              <img src={hospital.imageUrl} alt={hospital.name} className='object-cover h-[16rem] w-[16rem] top-3 rounded-3xl mt-4 ml-4 mr-4'/>
+              <img 
+                src={getRandomHospitalImage()} 
+                alt={hospital.name} 
+                className='object-cover h-[16rem] w-[16rem] top-3 rounded-3xl mt-4 ml-4 mr-4'
+              />
               <div className='w-7/12'>
                 <p className='mt-4 text-4xl font-normal'>{hospital.name}</p>
-                <p className='mt-4'>{hospital.distance} km from your location</p>
-                <p className='mt-2'>Currently <b>{hospital.isOpen ? 'Open' : 'Closed'}</b> | Offers Emergency Services</p>
                 <p className='mt-12'>Specialities :</p>
                 <div className='flex'>
-                  {(hospital.specialties || []).map((specialty, index) => (
+                  {(hospital.Specialities ? hospital.Specialities.split(',').map((s: string) => s.trim()) : []).map((specialty: string, index: number) => (
                     <div key={index} className='h-8 pl-2 pr-3 flex w-fit items-center bg-white rounded-full border-2 mr-2'>
                       <p>{specialty}</p>
                     </div>
@@ -218,8 +257,8 @@ const Search = () => {
                   </div>
                 </div>
                 <div className='h-1/4 w-full flex items-end justify-end'>
-                  <p className='mr-4 text-xl'>Consultancy Fee :</p>
-                  <p className='mr-4 text-4xl font-bold'>₹ {hospital.consultationFee}</p>
+                  <p className='mr-4 text-xl'>Budget :</p>
+                  <p className='mr-4 text-4xl font-bold'>₹ {hospital.budget}</p>
                 </div>
                 <div className='h-1/4 w-full flex items-end justify-end'>
                   <div className='flex'>
