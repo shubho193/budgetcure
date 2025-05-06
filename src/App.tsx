@@ -10,6 +10,7 @@ import { Toaster } from "@/components/ui/toaster";
 import Search from './_root/pages/Search';
 import Profile from './_root/pages/Profile';
 import AIIMS from './_root/pages/hospitals/AIIMS';
+import HospitalUploader from './_root/pages/HospitalDB';
 
 const App = () => {
   return (
@@ -34,6 +35,9 @@ const App = () => {
         </Route>
         <Route element={<AIIMS />}>
           <Route path="/aiims" element={<AIIMS />} />
+        </Route>
+        <Route element={<HospitalUploader />}>
+          <Route path="/hsupload" element={<HospitalUploader />} />
         </Route>
 
       </Routes>
