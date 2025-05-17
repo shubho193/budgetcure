@@ -12,7 +12,8 @@ export async function createUserAccount(user : INewUser) {
             user.username,
         );
 
-        if(!newAccount) throw Error;
+        if(!newAccount) throw new Error("Failed to create account");
+
         const avatarUrl = avatars.getInitials(user.name);
 
         const newUser = await saveUserToDB({
@@ -21,15 +22,15 @@ export async function createUserAccount(user : INewUser) {
             email : newAccount.email,
             username : user.username,
             imageUrl : avatarUrl,
-        })
+        });
 
+        if(!newUser) throw new Error("Failed to save user to database");
 
         return newAccount;
-    
     } 
-    catch (error) {
-        console.log(error);
-        return error;
+    catch (error: any) {
+        console.error("Error creating user account:", error);
+        throw new Error(error?.message || "Failed to create account");
     }
 }
 
@@ -56,12 +57,14 @@ export async function saveUserToDB(user: {
 export async function signInAccount(user: { 
     email: string; 
     password: string; 
-})  {
+}) {
     try {
         const session = await account.createEmailSession(user.email, user.password);
+        if(!session) throw new Error("Failed to create session");
         return session;
-    }   catch (error) {
-        console.log(error);
+    } catch (error: any) {
+        console.error("Error signing in:", error);
+        throw new Error(error?.message || "Failed to sign in");
     }
 }
 

@@ -55,13 +55,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           bio: currentAccount.bio,
         });
         setIsAuthenticated(true);
-
         return true;
       }
-
       return false;
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      console.error("Error checking auth user:", error);
+      // Clear any invalid session data
+      localStorage.removeItem('cookieFallback');
+      setUser(INITIAL_USER);
+      setIsAuthenticated(false);
       return false;
     } finally {
       setIsLoading(false);
@@ -69,15 +71,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    const cookieFallback = localStorage.getItem('cookieFallback');
     if (
-      localStorage.getItem('cookieFallback') === '[]' ||
-      localStorage.getItem('cookieFallback') === null
-      
+      cookieFallback === '[]' ||
+      cookieFallback === null ||
+      cookieFallback === undefined
     ) {
       navigate("/sign-in");
+    } else {
+      checkAuthUser();
     }
-
-    checkAuthUser();
   }, []);
 
   const value = {
