@@ -30,24 +30,39 @@ const SigninForm = () => {
   const { mutateAsync : signInAccount} = useSignInAccount();
 
   async function onSubmit(values: z.infer<typeof SigninValidation>) {
+    try {
+      const session = await signInAccount({
+        email: values.email,
+        password: values.password,
+      });
 
-    const session = await signInAccount({
-      email: values.email,
-      password: values.password,
-    })
+      if (!session) {
+        return toast({
+          variant: "destructive",
+          title: "Sign in failed",
+          description: "Please check your credentials and try again."
+        });
+      }
 
-    if(!session) {
-      return toast({  variant: "destructive", title: 'Sign in failed. Please try again.'})
-    }
+      const isLoggedIn = await checkAuthUser();
 
-    const isLoggedIn = await checkAuthUser();
-
-    if(isLoggedIn) {
-      form.reset();
-
-      navigate('/')
-    } else {
-      return toast({  variant: "destructive", title: 'Sign in failed. Please try again.'})
+      if (isLoggedIn) {
+        form.reset();
+        navigate('/');
+      } else {
+        return toast({
+          variant: "destructive",
+          title: "Authentication failed",
+          description: "Unable to verify your session. Please try again."
+        });
+      }
+    } catch (error: any) {
+      console.error("Sign in error:", error);
+      return toast({
+        variant: "destructive",
+        title: "Sign in failed",
+        description: error?.message || "Please check your credentials and try again."
+      });
     }
   }
 

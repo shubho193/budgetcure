@@ -64,7 +64,17 @@ export async function signInAccount(user: {
         return session;
     } catch (error: any) {
         console.error("Error signing in:", error);
-        throw new Error(error?.message || "Failed to sign in");
+        
+        // Handle specific Appwrite error codes
+        if (error?.code === 401) {
+            throw new Error("Invalid email or password");
+        } else if (error?.code === 429) {
+            throw new Error("Too many attempts. Please try again later");
+        } else if (error?.code === 503) {
+            throw new Error("Service temporarily unavailable. Please try again later");
+        }
+        
+        throw new Error(error?.message || "Failed to sign in. Please try again");
     }
 }
 
