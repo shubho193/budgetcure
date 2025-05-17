@@ -23,7 +23,6 @@ BudgetCure is a modern web application that helps users find hospitals based on 
   - React Query for data fetching
 
 - **Backend**:
-  - Appwrite (Backend as a Service)
   - Appwrite Database
   - Appwrite Authentication
 
