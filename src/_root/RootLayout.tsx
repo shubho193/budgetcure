@@ -3,11 +3,12 @@ import Bottombar from '@/components/shared/Bottombar'
 import { Button } from "@/components/ui/button"
 import { ChevronRight } from "lucide-react"
 import React from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 
 const RootLayout = () => {
   const [budget, setBudget] = React.useState("");
   const [location, setLocation] = React.useState("");
+  const navigate = useNavigate();
 
   const handleBudgetChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setBudget(event.target.value);
@@ -15,6 +16,11 @@ const RootLayout = () => {
 
   const handleLocationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLocation(event.target.value);
+  };
+
+  const handleSearch = () => {
+    // Navigate to search page with query parameters, even if they're empty
+    navigate(`/search?location=${location}&budget=${budget}`);
   };
   
   return (
@@ -37,7 +43,13 @@ const RootLayout = () => {
             
             <div className='text-right w-1/2'>
               <p className='pr-6 font-medium' >Location</p>
-              <input className='mr-6 bg-transparent outline-none text-right' type="number" placeholder="Where are you located?" value={location} onChange={handleLocationChange} />   
+              <input 
+                className='mr-6 bg-transparent outline-none text-right' 
+                type="text" 
+                placeholder="Where are you located?" 
+                value={location} 
+                onChange={handleLocationChange}
+              />   
             </div>
 
             <div className="via-neutral-500 to-transparent opacity-20 dark:opacity-100"> </div>
@@ -45,15 +57,22 @@ const RootLayout = () => {
             <div className='text-left w-1/2'>
               <p className='pl-6 font-medium'>Budget</p>
               <p className='pl-6' style={{ fontSize: '12px'}}></p>       
-              <input className='ml-6 bg-transparent outline-none' type="number" placeholder="What's your budget?" value={budget} onChange={handleBudgetChange} />      
+              <input 
+                className='ml-6 bg-transparent outline-none' 
+                type="number" 
+                placeholder="What's your budget?" 
+                value={budget} 
+                onChange={handleBudgetChange}
+              />      
             </div>
             
             <div className='bg-primary-500 rounded-md absolute right-4 transform transition duration-200 hover:scale-110'>
-              <a href='/search'>
-                <Button size="icon">
-                  <ChevronRight className="h-6 w-6"/>
-                </Button>
-              </a>
+              <Button 
+                size="icon"
+                onClick={handleSearch}
+              >
+                <ChevronRight className="h-6 w-6"/>
+              </Button>
             </div>
             
           </div>

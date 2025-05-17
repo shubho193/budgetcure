@@ -3,8 +3,11 @@ import Topbar from '@/components/shared/Topbar'
 import { ArrowLeft, Heart, IndianRupee, MapPin, Stethoscope } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useHospitalSearch } from '@/components/shared/HospitalSearch'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 
 const Search = () => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [location, setLocation] = useState('');
   const [category, setCategory] = useState('');
   const [budget, setBudget] = useState('');
@@ -54,6 +57,35 @@ const Search = () => {
     });
   };
 
+  // Handle back button click
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  // Initialize search from URL parameters
+  useEffect(() => {
+    const locationParam = searchParams.get('location');
+    const budgetParam = searchParams.get('budget');
+
+    if (locationParam) setLocation(locationParam);
+    if (budgetParam) setBudget(budgetParam);
+
+    // Perform initial search if we have parameters
+    if (locationParam || budgetParam) {
+      searchHospitals({
+        location: locationParam || undefined,
+        budget: budgetParam ? parseInt(budgetParam) : undefined,
+        category: undefined,
+        rating: undefined,
+        filters: {
+          nearbyArea: true,
+          withinBudget: true,
+          specifiedCategories: true
+        }
+      });
+    }
+  }, [searchParams]);
+
   return (
     <div className='w-full'>
       <div className='' style={{ marginTop: '1rem', marginLeft: '4rem', marginRight: '4rem', marginBottom: '1rem'}}>
@@ -65,7 +97,7 @@ const Search = () => {
           <div className='mt-4 ml-4 mr-6 w-full'>
             
             <div className=''>
-              <Button size="icon">
+              <Button size="icon" onClick={handleBack}>
                 <ArrowLeft className="h-6 w-6"/>
               </Button>
             </div>
@@ -223,7 +255,7 @@ const Search = () => {
           </div>
         </div> 
 
-        <div className='w-9/12 pl-8 pt-4 pr-8'>
+        <div className='w-9/12 p-8'>
           <p className='text-xl font-normal mb-4'>Showing results for the search criteria.</p>
           
           {loading && <p>Loading...</p>}
