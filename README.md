@@ -1,30 +1,109 @@
-# React + TypeScript + Vite
+# BudgetCure - Smart Hospital Search Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+BudgetCure is a modern web application that helps users find hospitals based on their location, budget, and medical needs. The platform provides a user-friendly interface to search, filter, and compare hospitals, making healthcare decisions easier and more informed.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🔍 **Smart Search**: Find hospitals based on location, budget, and medical specialties
+- 💰 **Budget Filtering**: Filter hospitals within your budget range
+- 📍 **Location-based Search**: Find hospitals near your location
+- ⭐ **Rating System**: View hospital ratings and reviews
+- 🏥 **Detailed Hospital Profiles**: Comprehensive information about each hospital
+- 🔐 **User Authentication**: Secure login and signup system
+- 📱 **Responsive Design**: Works seamlessly on desktop and mobile devices
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Frontend**:
+  - React.js
+  - TypeScript
+  - Tailwind CSS
+  - Shadcn UI Components
+  - React Router for navigation
+  - React Query for data fetching
 
-- Configure the top-level `parserOptions` property like this:
+- **Backend**:
+  - Appwrite (Backend as a Service)
+  - Appwrite Database
+  - Appwrite Authentication
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v14 or higher)
+- npm or yarn
+- Appwrite account and project setup
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/BudgetCure.git
+   cd BudgetCure
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+3. Create a `.env` file in the root directory and add your Appwrite configuration:
+   ```
+   VITE_APPWRITE_ENDPOINT=your_appwrite_endpoint
+   VITE_APPWRITE_PROJECT_ID=your_project_id
+   VITE_APPWRITE_DATABASE_ID=your_database_id
+   VITE_APPWRITE_COLLECTION_ID=your_collection_id
+   ```
+
+4. Start the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+## Project Structure
+
+```
+src/
+├── _auth/           # Authentication related components
+├── _root/           # Root layout and pages
+├── components/      # Reusable components
+│   ├── shared/     # Shared components
+│   └── ui/         # UI components
+├── lib/            # Utility functions and configurations
+│   ├── appwrite/   # Appwrite related configurations
+│   └── react-query/# React Query configurations
+└── types/          # TypeScript type definitions
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Features in Detail
+
+### Search Functionality
+- Search hospitals by location
+- Filter by budget range
+- Filter by medical specialties
+- Sort by ratings
+- View detailed hospital information
+
+### User Authentication
+- Secure signup and login
+- User profile management
+- Session management
+
+### Hospital Information
+- Hospital details
+- Specialties offered
+- Consultation fees
+- Ratings and reviews
+- Location information
+
+## Acknowledgments
+
+- [Appwrite](https://appwrite.io/) for the backend services
+- [Shadcn UI](https://ui.shadcn.com/) for the UI components
+- [Lucide Icons](https://lucide.dev/) for the icons
+- [Tailwind CSS](https://tailwindcss.com/) for the styling
