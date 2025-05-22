@@ -4,10 +4,12 @@ import { ArrowLeft, Heart, IndianRupee, MapPin, Stethoscope } from 'lucide-react
 import { Button } from '@/components/ui/button'
 import { useHospitalSearch } from '@/components/shared/HospitalSearch'
 import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useUserContext } from '@/context/AuthContext'
 
 const Search = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { isAuthenticated } = useUserContext();
   const [location, setLocation] = useState('');
   const [category, setCategory] = useState('');
   const [budget, setBudget] = useState('');
@@ -62,29 +64,31 @@ const Search = () => {
     navigate(-1);
   };
 
-  // Initialize search from URL parameters
+  // Reinitialize search when authentication state changes
   useEffect(() => {
-    const locationParam = searchParams.get('location');
-    const budgetParam = searchParams.get('budget');
+    if (isAuthenticated) {
+      const locationParam = searchParams.get('location');
+      const budgetParam = searchParams.get('budget');
 
-    if (locationParam) setLocation(locationParam);
-    if (budgetParam) setBudget(budgetParam);
+      if (locationParam) setLocation(locationParam);
+      if (budgetParam) setBudget(budgetParam);
 
-    // Perform initial search if we have parameters
-    if (locationParam || budgetParam) {
-      searchHospitals({
-        location: locationParam || undefined,
-        budget: budgetParam ? parseInt(budgetParam) : undefined,
-        category: undefined,
-        rating: undefined,
-        filters: {
-          nearbyArea: true,
-          withinBudget: true,
-          specifiedCategories: true
-        }
-      });
+      // Perform initial search if we have parameters
+      if (locationParam || budgetParam) {
+        searchHospitals({
+          location: locationParam || undefined,
+          budget: budgetParam ? parseInt(budgetParam) : undefined,
+          category: undefined,
+          rating: undefined,
+          filters: {
+            nearbyArea: true,
+            withinBudget: true,
+            specifiedCategories: true
+          }
+        });
+      }
     }
-  }, [searchParams]);
+  }, [isAuthenticated, searchParams]);
 
   return (
     <div className='w-full'>

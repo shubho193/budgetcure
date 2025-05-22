@@ -17,7 +17,7 @@ import { useUserContext } from "@/context/AuthContext";
 const SignupForm = () => {
   const { toast } = useToast()
   const navigate = useNavigate();
-  const { checkAuthUser, isLoading: isUserloading } = useUserContext();
+  const { checkAuthUser } = useUserContext();
   
   const form = useForm<z.infer<typeof SignupValidation>>({
     resolver: zodResolver(SignupValidation),
@@ -29,24 +29,69 @@ const SignupForm = () => {
     },
   })
 
-  const { mutateAsync: createUserAccount, isPending : isCreatingAccount } = useCreateUserAccount();
-  const { mutateAsync : signInAccount, isLoading: isSigningInUser } = useSignInAccount();
+  const { mutateAsync: createUserAccount, isPending: isCreatingAccount } = useCreateUserAccount();
+  const { mutateAsync: signInAccount } = useSignInAccount();
 
   async function onSubmit(values: z.infer<typeof SignupValidation>) {
-    const newUser = await createUserAccount(values);
+    try {
+      // Step 1: Create the account
+      const newUser = await createUserAccount(values);
 
-    if(!newUser) {
+      if(!newUser) {
+        return toast({
+          variant: "destructive",
+          title: "Account creation failed",
+          description: "Unable to create your account. Please try again."
+        });
+      }
+
+      toast({
+        title: "Account created successfully",
+        description: "Your account has been created. Signing you in..."
+      });
+
+      // Step 2: Sign in the user
+      const session = await signInAccount({
+        email: values.email,
+        password: values.password,
+      });
+
+      if(!session) {
+        return toast({
+          variant: "destructive",
+          title: "Sign in failed",
+          description: "Account created but unable to sign in. Please try signing in manually."
+        });
+      }
+
+      // Step 3: Verify authentication
+      const isLoggedIn = await checkAuthUser();
+
+      if (isLoggedIn) {
+        form.reset();
+        toast({
+          title: "Welcome!",
+          description: "You have been successfully signed in."
+        });
+        
+        // Add a small delay before navigation to ensure the toast is visible
+        setTimeout(() => {
+          navigate('/');
+        }, 1000);
+      } else {
+        return toast({
+          variant: "destructive",
+          title: "Authentication failed",
+          description: "Unable to verify your session. Please try signing in manually."
+        });
+      }
+    } catch (error: any) {
+      console.error("Sign up error:", error);
       return toast({
-        variant: "destructive", 
-        title: "Sign up failed. Please try again.",});
-    }
-    const session = await signInAccount({
-      email: values.email,
-      password: values.password,
-    })
-
-    if(!session) {
-      return toast({  variant: "destructive", title: 'Sign in failed. Please try again.'})
+        variant: "destructive",
+        title: "Sign up failed",
+        description: error?.message || "An unexpected error occurred. Please try again."
+      });
     }
   }
 
